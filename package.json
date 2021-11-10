@@ -1,0 +1,27 @@
+{
+    "name": "Reto-Rimac",
+    "version": "1.0.0",
+    "description": "",
+    "main": "handler.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "aws-sdk": "^2.858.0",
+        "axios": "^0.21.1",
+        "express": "^4.17.1",
+        "md5": "^2.3.0",
+        "serverless-http": "^2.7.0",
+        "serverless-plugin-include-dependencies": "^4.1.0",
+        "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "serverless-aws-documentation": "^1.1.0",
+        "serverless-dynamodb-local": "^0.2.39",
+        "serverless-mocha-plugin": "^1.12.0",
+        "serverless-offline": "^6.9.0"
+    }
+}

@@ -3,30 +3,17 @@ service: api-rimac
 plugins:
   - serverless-offline
   - serverless-plugin-include-dependencies
-  - serverless-mocha-plugin
-  - serverless-aws-documentation
 
 package:
   exclude:
     - node_modules/**
 
-frameworkVersion: '2'
+frameworkVersion: "2"
 
 custom:
   settings:
     POST_TABLE_PEOPLE: people
     URL_STARTWARS: https://swapi.py4e.com/api
-  documentation:
-    api:
-      info:
-        version: "1" # see note above about this being ignored
-        title: "RestAPI - SWAPI" # see note above about this being ignored
-        description: "Adaptar y transformar los modelos de la API de prueba. Se tienen que mapear todos los nombres de atributos modelos del inglés al español (Ej: name -> nombre)."
-        termsOfService: "http://www.example.com/terms-of-service"
-        contact:
-          name: "Edgar Sandoval Carlos"
-          url: ""
-          email: "edsan_6@hotmail.com"
 
 provider:
   name: aws
@@ -45,8 +32,8 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-      - "arn:aws:dynamodb:us-east-1:*:table/people"
-      - "arn:aws:dynamodb:us-east-1:*:table/planet"
+        - "arn:aws:dynamodb:us-east-1:*:table/people"
+        - "arn:aws:dynamodb:us-east-1:*:table/planet"
 
 functions:
   createPeople:
@@ -59,26 +46,6 @@ functions:
             parameters:
               paths:
                 number: true
-          documentation:
-            summary: "Crear un registro de persona"
-            description: "En caso no exista el id de people creará el registro en dynamoDB"
-            pathParams:
-              -
-                name: "number"
-                description: "id del registro people del API SWAPI"
-            methodResponses:
-            -
-              statusCode: "200"
-              responseBody:
-                description: "Se obtuvo el registro de la base de datos"
-            -
-              statusCode: "201"
-              responseBody:
-                description: "Se creó correctamente el registro"
-            -
-              statusCode: "500"
-              responseBody:
-                description: "Error en el servicio"
 
   getAllPeople:
     handler: controllers/peopleController.getAllPeople
@@ -86,18 +53,7 @@ functions:
       - http:
           path: /getAllPeople
           method: get
-          documentation:
-            summary: "Obtener todos los registros"
-            description: "Obtiene todos los registros de la tabla people"
-            methodResponses:
-            -
-              statusCode: "200"
-              responseBody:
-                description: "Se obtuvo todos los registros"
-            -
-              statusCode: "500"
-              responseBody:
-                description: "Error en el servicio"
+
   updatePeople:
     handler: controllers/peopleController.updatePeople
     events:
@@ -108,24 +64,6 @@ functions:
             parameters:
               paths:
                 id: true
-          documentation:
-            summary: "Se actualizará el registro people"
-            description: "Se actualizará el registro people"
-            pathParams:
-              -
-                name: "id"
-                description: "id del registro people del API SWAPI"
-            requestBody:
-              description: '{"paramName":"campo","paramValue":"valor"}'
-            methodResponses:
-            -
-              statusCode: "200"
-              responseBody:
-                description: "Se actualizó con éxito"
-            -
-              statusCode: "500"
-              responseBody:
-                description: "Error en el servicio"
 
   deletePeople:
     handler: controllers/peopleController.deletePeople
@@ -137,35 +75,73 @@ functions:
             parameters:
               paths:
                 id: true
-          documentation:
-            summary: "Se elimina un registro de la tabla people"
-            description: "Se eliminará el registro del id ingresado en dynamoDB"
-            pathParams:
-              -
-                name: "id"
-                description: "id del registro people del API SWAPI"
-            methodResponses:
-            -
-              statusCode: "200"
-              responseBody:
-                description: "Se obtuvo eliminó correctamete de la base de datos"
-            -
-              statusCode: "500"
-              responseBody:
-                description: "Error en el servicio"
+
+  createPlanet:
+    handler: controllers/planetController.createPlanet
+    events:
+      - http:
+          path: /createPlanet/{number}
+          method: post
+          request:
+            parameters:
+              paths:
+                number: true
+        
+  getAllPlanets:
+    handler: controllers/planetController.getAllPlanets
+    events:
+      - http:
+          path: /getAllPlanets
+          method: get
+          
+  updatePlanet:
+    handler: controllers/planetController.updatePlanet
+    events:
+      - http:
+          path: /updatePlanet/{id}
+          method: put
+          request:
+            parameters:
+              paths:
+                id: true
+
+  deletePlanet:
+    handler: controllers/planetController.deletePlanet
+    events:
+      - http:
+          path: /deletePlanet/{id}
+          method: delete
+          request:
+            parameters:
+              paths:
+                id: true
 
 resources:
   Resources:
-    PostsTable: 
+    PostsTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-        - AttributeName: "id"
-          AttributeType: "S"
+          - AttributeName: "id"
+            AttributeType: "S"
         KeySchema:
-        - AttributeName: "id"
-          KeyType: "HASH"
+          - AttributeName: "id"
+            KeyType: "HASH"
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: people
+
+    PlanetTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: "id"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "id"
+            KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: planet

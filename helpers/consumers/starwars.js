@@ -1,6 +1,6 @@
 const axios = require('axios');
-const peopleModel = require('../../models/peopleModel');
 const planetModel = require('../../models/planetMode');
+const peopleModel = require('../../models/peopleModel');
 
 const getPeople = async(number) => {
 
@@ -30,8 +30,38 @@ const getPeople = async(number) => {
     } catch (error) {
         throw error;
     }
-};
+}
+
+getPlanet = async(number) => {
+    try {
+        const { data } = await axios({
+            methos: 'GET',
+            url: `${process.env.URL_STARTWARS}/planets/${number}`
+        })
+
+        const planet = new planetModel(
+            data.name,
+            data.rotation_period,
+            data.orbital_period,
+            data.diameter,
+            data.climate,
+            data.gravity,
+            data.terrain,
+            data.surface_water,
+            data.population,
+            data.residents,
+            data.films,
+            data.created,
+            data.edited,
+            data.url
+        )
+        return planet;
+    } catch (error) {
+        throw error;
+    }
+}
 
 module.exports = {
-    getPeople
+    getPeople,
+    getPlanet
 }

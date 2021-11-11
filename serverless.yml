@@ -3,7 +3,7 @@ service: api-rimac
 plugins:
   - serverless-offline
   - serverless-plugin-include-dependencies
-
+  - serverless-mocha-plugin
 package:
   exclude:
     - node_modules/**
@@ -13,6 +13,7 @@ frameworkVersion: "2"
 custom:
   settings:
     POST_TABLE_PEOPLE: people
+    POST_TABLE_PLANET: planet
     URL_STARTWARS: https://swapi.py4e.com/api
 
 provider:

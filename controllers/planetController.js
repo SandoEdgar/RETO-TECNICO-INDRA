@@ -9,6 +9,7 @@ module.exports.createPlanet = async(event, context, callback) => {
     try {
         const numberPlanet = event.pathParameters.number;
         const res = await dynamo.getByID(md5(numberPlanet), postsTablePlanet);
+
         if (!res || !res.Item) {
             const planetConsumer = await consumerApi.getPlanet(numberPlanet);
             if (planetConsumer) {

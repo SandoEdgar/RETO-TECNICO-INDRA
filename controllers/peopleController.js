@@ -7,10 +7,12 @@ const postsTablePeople = process.env.POST_TABLE_PEOPLE || 'people';
 
 module.exports.createPeople = async(event, context, callback) => {
     try {
+
         const numberPeople = event.pathParameters.number;
         const res = await dynamo.getByID(md5(numberPeople), postsTablePeople);
-        console.log(res)
+
         if (!res || !res.Item) {
+
             const peopleConsumer = await consumerApi.getPeople(numberPeople);
 
             if (peopleConsumer) {
